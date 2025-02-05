@@ -1,19 +1,13 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ProfileScreen } from "./screens/ProfileScreen";
-import { WelcomeScreen } from "./screens/WelcomeScreen";
+import { Link } from "expo-router";
+import { View } from "react-native";
 
 export default function Index() {
-  const Stack = createNativeStackNavigator();
-
   return (
-    <Stack.Navigator initialRouteName="Welcome">
-      <Stack.Screen
-        name="Welcome"
-        component={WelcomeScreen}
-        options={{ title: "Welcome wow" }}
-      />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-    </Stack.Navigator>
+    <View>
+      home screen!
+      <Link href="/screens/profile">go to profile</Link>
+      {/* ...other links */}
+      <Link href="/screens/welcome">go to welcome</Link>
+    </View>
   );
 }
