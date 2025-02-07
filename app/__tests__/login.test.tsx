@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
-import LoginScreen from "./login";
+import LoginScreen from "../screens/login";
 
 //this fixes a lot of random errors and I don't know why
 jest.useFakeTimers();
