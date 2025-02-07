@@ -22,18 +22,20 @@ const LoginScreen = () => {
     >
       {({ handleChange, handleSubmit, values }) => (
         <View style={styles.container}>
-          <Text variant="displayLarge" style={styles.title}>
+          <Text variant="displayLarge" style={styles.title} testID="loginTitle">
             Login
           </Text>
           <View style={styles.textFieldContainer}>
             <TextInput
               label="Email"
+              testID="emailField"
               onChangeText={handleChange("email")}
               value={values.email}
               style={{ marginBottom: 16, width: 300 }}
             />
             <TextInput
               label="Password"
+              testID="passwordField"
               onChangeText={handleChange("password")}
               value={values.password}
             />
