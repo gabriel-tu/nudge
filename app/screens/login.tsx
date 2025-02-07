@@ -43,7 +43,9 @@ const LoginScreen = () => {
           <View style={styles.buttonContainer}>
             <Button
               mode="contained"
-              onPress={handleSubmit}
+              onPress={() => {
+                handleSubmit;
+              }}
               style={{ marginBottom: 16, width: 300 }}
             >
               Login

@@ -6,7 +6,6 @@ export default function Index() {
     <View>
       home screen!
       <Link href="/screens/profile">go to profile</Link>
-      {/* ...other links */}
       <Link href="/screens/welcome">go to welcome</Link>
       <Link href="/screens/login">go to login</Link>
     </View>
