@@ -53,13 +53,13 @@ const LoginScreen = () => {
               name="email"
               value={values.email}
               onChangeText={handleChange("email")}
-              error={touched.email === true && errors.email ? errors.email : ""}
+              error={touched.email && errors.email ? errors.email : ""}
               style={styles.textField}
               testID="emailField"
             />
             <HelperText
               type="error"
-              visible={touched.email === true && errors.email ? true : false}
+              visible={touched.email && errors.email ? true : false}
               testID="emailErrorText"
             >
               {errors.email}
