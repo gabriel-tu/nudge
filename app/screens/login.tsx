@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Field, Form, Formik } from "formik";
 import { StyleSheet, View } from "react-native";
@@ -6,6 +7,8 @@ import * as yup from "yup";
 import { app } from "../services/config";
 
 const LoginScreen = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const loginValidationSchema = yup.object().shape({
     email: yup
       .string()
@@ -71,8 +74,15 @@ const LoginScreen = () => {
               label="Password"
               type="password"
               name="password"
-              secureTextEntry={true}
-              values={values.password}
+              secureTextEntry={!passwordVisible}
+              right={
+                <TextInput.Icon
+                  icon="eye"
+                  onPress={() => setPasswordVisible(!passwordVisible)}
+                  testID="showPasswordButton"
+                />
+              }
+              value={values.password}
               onChangeText={handleChange("password")}
               error={touched.password && errors.password ? errors.password : ""}
               style={styles.textField}
