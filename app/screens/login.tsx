@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { Field, Form, Formik } from "formik";
+import { Formik } from "formik";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
@@ -41,43 +41,38 @@ const LoginScreen = () => {
       {({
         errors,
         touched,
+        values,
         handleChange,
         handleSubmit,
-        handleBlur,
-        values,
+        setFieldTouched,
       }) => (
         <View style={styles.container}>
           <Text variant="displayLarge" style={styles.title} testID="loginTitle">
             Login
           </Text>
-          <Form>
-            <Field
-              as={TextInput}
+          <View>
+            <TextInput
               id="email"
               mode="outlined"
               label="Email"
-              type="email"
-              name="email"
               value={values.email}
               onChangeText={handleChange("email")}
-              error={touched.email && errors.email ? errors.email : ""}
+              error={touched.email && !!errors.email}
+              onBlur={() => setFieldTouched("email", true)}
               style={styles.textField}
               testID="emailField"
             />
             <HelperText
               type="error"
-              visible={touched.email && !!errors.email}
+              visible={touched.email && errors.email ? true : false}
               testID="emailErrorText"
             >
-              {errors.email}
+              {touched.email ? errors.email : undefined}
             </HelperText>
-            <Field
-              as={TextInput}
+            <TextInput
               id="password"
               mode="outlined"
               label="Password"
-              type="password"
-              name="password"
               secureTextEntry={!passwordVisible}
               right={
                 <TextInput.Icon
@@ -88,43 +83,37 @@ const LoginScreen = () => {
               }
               value={values.password}
               onChangeText={handleChange("password")}
-              error={touched.password && errors.password ? errors.password : ""}
+              error={touched.password && !!errors.password}
+              onBlur={() => setFieldTouched("password", true)}
               style={styles.textField}
               testID="passwordField"
             />
             <HelperText
               type="error"
-              visible={touched.password && !!errors.password}
+              visible={touched.password && errors.password ? true : false}
               testID="passwordErrorText"
             >
-              {errors.password}
+              {touched.password ? errors.password : undefined}
             </HelperText>
-            <Field
-              as={Button}
-              id="loginbutton"
-              mode="contained"
-              type="submit"
-              name="login"
-              disabled={errors.email || values.password.length === 0}
-              onPress={handleSubmit}
-              onBlur={() => handleBlur("login")}
-              style={styles.buttonContainer}
-              testID="loginButton"
-            >
-              Login
-            </Field>
-            <Field
-              as={Button}
-              id="signupbutton"
-              mode="outlined"
-              name="signup"
-              onBlur={() => handleBlur("signup")}
-              style={styles.buttonContainer}
-              testID="signupButton"
-            >
-              Signup
-            </Field>
-          </Form>
+          </View>
+          <Button
+            id="loginbutton"
+            mode="contained"
+            disabled={!!errors.email || values.password.length === 0}
+            onPress={() => handleSubmit()}
+            style={styles.buttonContainer}
+            testID="loginButton"
+          >
+            Login
+          </Button>
+          <Button
+            id="signupbutton"
+            mode="outlined"
+            style={styles.buttonContainer}
+            testID="signupButton"
+          >
+            Signup
+          </Button>
         </View>
       )}
     </Formik>
@@ -151,6 +140,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   buttonContainer: {
+    width: 100,
     marginBottom: 8,
   },
 });
