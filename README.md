@@ -16,6 +16,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
+3. Get firebase api keys from the firebase project and add the keys to a .env
+
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
