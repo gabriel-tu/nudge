@@ -46,7 +46,6 @@ const LoginScreen = () => {
               type="email"
               name="email"
               value={values.email}
-              testid="emailField"
             >
               {({}) => (
                 <div>
@@ -56,11 +55,12 @@ const LoginScreen = () => {
                     value={values.email}
                     onChangeText={handleChange("email")}
                     style={styles.textField}
+                    testID="emailField"
                   />
                 </div>
               )}
             </Field>
-            <Field type="password" name="password" testID="passwordField">
+            <Field type="password" name="password">
               {({}) => (
                 <div>
                   <TextInput
@@ -70,6 +70,7 @@ const LoginScreen = () => {
                     value={values.password}
                     onChangeText={handleChange("password")}
                     style={styles.textField}
+                    testID="passwordField"
                   />
                 </div>
               )}

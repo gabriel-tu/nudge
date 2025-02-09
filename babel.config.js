@@ -5,5 +5,11 @@ module.exports = function (api) {
       'babel-preset-expo',
       "@babel/preset-typescript",
     ],
+    plugins: [
+      ['dotenv-import', {
+        moduleName: '@env',
+        path: '.env',
+      }],
+    ],
   };
 };
