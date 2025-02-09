@@ -1,7 +1,7 @@
-import { Button, Text, TextInput } from "@react-native-material/core";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Field, Form, Formik } from "formik";
 import { StyleSheet, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
 import { app } from "../services/config";
 
@@ -38,10 +38,10 @@ const LoginScreen = () => {
     >
       {({ handleChange, handleSubmit, values }) => (
         <View style={styles.container}>
-          <Text variant="h1" style={styles.title} testID="loginTitle">
+          <Text variant="displayLarge" style={styles.title} testID="loginTitle">
             Login
           </Text>
-          <Form style={styles.textFieldContainer}>
+          <Form>
             <Field
               type="email"
               name="email"
@@ -51,28 +51,25 @@ const LoginScreen = () => {
               {({}) => (
                 <div>
                   <TextInput
+                    mode="outlined"
                     label="Email"
-                    variant="outlined"
                     value={values.email}
                     onChangeText={handleChange("email")}
+                    style={styles.textField}
                   />
                 </div>
               )}
             </Field>
-            <Field
-              type="password"
-              name="password"
-              testid="passwordField"
-              style={styles.textField}
-            >
+            <Field type="password" name="password" testID="passwordField">
               {({}) => (
                 <div>
                   <TextInput
+                    mode="outlined"
                     label="Password"
-                    variant="outlined"
                     secureTextEntry={true}
                     value={values.password}
                     onChangeText={handleChange("password")}
+                    style={styles.textField}
                   />
                 </div>
               )}
@@ -81,23 +78,27 @@ const LoginScreen = () => {
               {({}) => (
                 <div>
                   <Button
-                    title="Login"
+                    mode="contained"
                     onPress={() => {
                       handleSubmit();
                     }}
-                  />
+                    style={styles.buttonContainer}
+                  >
+                    Login
+                  </Button>
                 </div>
               )}
             </Field>
             <Field>
               {({}) => (
                 <div>
-                  <Button title="Signup"></Button>
+                  <Button mode="outlined" style={styles.buttonContainer}>
+                    Signup
+                  </Button>
                 </div>
               )}
             </Field>
           </Form>
-          <View style={styles.buttonContainer}></View>
         </View>
       )}
     </Formik>
@@ -118,15 +119,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   textField: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 8,
     width: 300,
   },
   textFieldContainer: {
     padding: 24,
   },
   buttonContainer: {
-    padding: 24,
+    marginBottom: 8,
   },
 });
