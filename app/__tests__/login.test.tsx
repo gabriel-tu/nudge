@@ -9,6 +9,18 @@ import {
 import LoginScreen from "../screens/login";
 import { ReactTestInstance } from "react-test-renderer";
 
+// mock dependencies
+jest.mock("firebase/auth");
+// https://github.com/callstack/react-native-testing-library/issues/1712
+jest.mock("expo-font", () => {
+  const module: typeof import("expo-font") = {
+    ...jest.requireActual("expo-font"),
+    isLoaded: jest.fn(() => true),
+  };
+
+  return module;
+});
+
 //this fixes a lot of random errors and I don't know why
 jest.useFakeTimers();
 

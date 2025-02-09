@@ -13,11 +13,8 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFilesAfterEnv": [
-      "dotenv/config"
-    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(@firebase|firebase|@react-native|react-native|expo-modules-core|expo))"
+      "node_modules/(?!(@firebase|firebase|@react-native|react-native|expo-modules-core|expo|@expo))"
     ]
   },
   "dependencies": {
