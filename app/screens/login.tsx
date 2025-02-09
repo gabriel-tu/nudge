@@ -9,6 +9,10 @@ import { app } from "../services/config";
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const updatePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   const loginValidationSchema = yup.object().shape({
     email: yup
       .string()
@@ -62,7 +66,7 @@ const LoginScreen = () => {
             />
             <HelperText
               type="error"
-              visible={touched.email && errors.email ? true : false}
+              visible={touched.email && !!errors.email}
               testID="emailErrorText"
             >
               {errors.email}
@@ -78,7 +82,7 @@ const LoginScreen = () => {
               right={
                 <TextInput.Icon
                   icon="eye"
-                  onPress={() => setPasswordVisible(!passwordVisible)}
+                  onPress={updatePasswordVisibility}
                   testID="showPasswordButton"
                 />
               }
@@ -90,7 +94,7 @@ const LoginScreen = () => {
             />
             <HelperText
               type="error"
-              visible={touched.password && errors.password ? true : false}
+              visible={touched.password && !!errors.password}
               testID="passwordErrorText"
             >
               {errors.password}
