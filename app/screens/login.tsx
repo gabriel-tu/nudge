@@ -74,19 +74,13 @@ const LoginScreen = () => {
               secureTextEntry={true}
               values={values.password}
               onChangeText={handleChange("password")}
-              error={
-                touched.password === true && errors.password
-                  ? errors.password
-                  : ""
-              }
+              error={touched.password && errors.password ? errors.password : ""}
               style={styles.textField}
               testID="passwordField"
             />
             <HelperText
               type="error"
-              visible={
-                touched.password === true && errors.password ? true : false
-              }
+              visible={touched.password && errors.password ? true : false}
               testID="passwordErrorText"
             >
               {errors.password}
