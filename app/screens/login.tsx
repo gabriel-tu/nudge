@@ -92,10 +92,8 @@ const LoginScreen = () => {
               type="submit"
               name="login"
               disabled={errors.email || values.password.length === 0}
-              onPress={() => {
-                handleSubmit();
-              }}
-              onBlur={handleBlur("login")}
+              onPress={handleSubmit}
+              onBlur={() => handleBlur("login")}
               style={styles.buttonContainer}
               testID="loginButton"
             >
@@ -106,7 +104,7 @@ const LoginScreen = () => {
               id="signupbutton"
               mode="outlined"
               name="signup"
-              onBlur={handleBlur("signup")}
+              onBlur={() => handleBlur("signup")}
               style={styles.buttonContainer}
               testID="signupButton"
             >
