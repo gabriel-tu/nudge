@@ -29,15 +29,26 @@ const LoginScreen = () => {
       onSubmit={(values) => console.log(values)} // TODO: replace with login logic
       validationSchema={signUpValidationSchema}
     >
-      {({ handleChange, handleSubmit, values }) => (
+      {({
+        errors,
+        touched,
+        handleChange,
+        handleSubmit,
+        handleBlur,
+        values,
+      }) => (
         <View style={styles.container}>
-          <Image
-            style={styles.titleImage}
-            source={require("../../assets/images/nudge-title.png")}
-          />
+          <View style={{ alignItems: "center" }}>
+            <Image
+              style={styles.titleImage}
+              source={require("../../assets/images/nudge-title.png")}
+            />
+            <Text style={styles.titleSubText}>get nudging</Text>
+          </View>
           <View style={styles.textFieldContainer}>
             <TextInput
               label="Email"
+              mode="outlined"
               testID="emailField"
               onChangeText={handleChange("email")}
               value={values.email}
@@ -45,6 +56,7 @@ const LoginScreen = () => {
             />
             <TextInput
               label="Username"
+              mode="outlined"
               testID="usernameField"
               onChangeText={handleChange("username")}
               value={values.username}
@@ -52,6 +64,7 @@ const LoginScreen = () => {
             />
             <TextInput
               label="Password"
+              mode="outlined"
               testID="passwordField"
               onChangeText={handleChange("password")}
               value={values.password}
@@ -59,10 +72,11 @@ const LoginScreen = () => {
             />
             <TextInput
               label="Confirm Your Passwrd"
+              mode="outlined"
               testID="confirmPasswordField"
               onChangeText={handleChange("confirmPassword")}
               value={values.confirmPassword}
-              style={{ marginBottom: 16, width: 300 }}
+              style={{ width: 300 }}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -71,13 +85,17 @@ const LoginScreen = () => {
               onPress={() => {
                 handleSubmit;
               }}
-              style={{ marginBottom: 8, width: 300 }}
+              style={{ width: 300 }}
             >
               Create Account
             </Button>
             <View style={styles.loginButtonContainer}>
-              <Divider style={{ margin: 8, width: 288 }} />
-              <Text>Already have an account?</Text>
+              <Divider
+                style={{ marginTop: 24, marginBottom: 24, width: 288 }}
+              />
+              <Text style={styles.alreadyHaveAnAccountText}>
+                Already have an account?
+              </Text>
               <Button
                 mode="contained"
                 style={{
@@ -113,19 +131,29 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   textFieldContainer: {
-    padding: 24,
+    margin: 24,
   },
   buttonContainer: {
-    padding: 24,
+    marginBottom: 24,
+    marginLeft: 24,
+    marginRight: 24,
   },
   loginButtonContainer: {
     flex: 1,
     alignItems: "center",
   },
   titleImage: {
-    marginBottom: 24,
-    width: "40%",
+    height: 60, //TODO: have another value for smaller screens
     maxWidth: 300,
     resizeMode: "contain",
+  },
+  titleSubText: {
+    marginBottom: 24,
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  alreadyHaveAnAccountText: {
+    color: "#2E4961",
+    fontSize: 14,
   },
 });

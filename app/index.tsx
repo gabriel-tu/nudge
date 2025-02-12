@@ -8,6 +8,7 @@ export default function Index() {
       <Link href="/screens/profile">go to profile</Link>
       <Link href="/screens/welcome">go to welcome</Link>
       <Link href="/screens/login">go to login</Link>
+      <Link href="/screens/signup">go to signup</Link>
     </View>
   );
 }
