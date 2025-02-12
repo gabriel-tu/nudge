@@ -12,10 +12,18 @@ const LoginScreen = () => {
       .string()
       .email("Please enter a valid email")
       .required("An email is required"),
+    username: yup
+      .string()
+      .min(3, ({ min }) => `Username must be at least ${min} characters`),
     password: yup
       .string()
       .min(6, ({ min }) => "Password must be at least ${min} characters")
       .required("Please enter a password"),
+    confirmPassword: yup
+      .string()
+      .min(6, ({ min }) => `Password must be at least ${min} characters`)
+      .required("Please enter a password")
+      .oneOf([yup.ref("password")], "Does not match with field1!"),
   });
 
   return (
@@ -29,21 +37,16 @@ const LoginScreen = () => {
       onSubmit={(values) => console.log(values)} // TODO: replace with login logic
       validationSchema={signUpValidationSchema}
     >
-      {({
-        errors,
-        touched,
-        handleChange,
-        handleSubmit,
-        handleBlur,
-        values,
-      }) => (
+      {({ handleChange, handleSubmit, values, touched, errors }) => (
         <View style={styles.container}>
           <View style={{ alignItems: "center" }}>
             <Image
               style={styles.titleImage}
               source={require("../../assets/images/nudge-title.png")}
             />
-            <Text style={styles.titleSubText}>get nudging</Text>
+            <Text style={styles.titleSubText} testID="titleSubText">
+              get nudging
+            </Text>
           </View>
           <View style={styles.textFieldContainer}>
             <TextInput
@@ -51,6 +54,7 @@ const LoginScreen = () => {
               mode="outlined"
               testID="emailField"
               onChangeText={handleChange("email")}
+              error={touched.email && Boolean(errors.email)}
               value={values.email}
               style={{ marginBottom: 16, width: 300 }}
             />
@@ -59,22 +63,27 @@ const LoginScreen = () => {
               mode="outlined"
               testID="usernameField"
               onChangeText={handleChange("username")}
+              error={touched.username && Boolean(errors.username)}
               value={values.username}
               style={{ marginBottom: 16, width: 300 }}
             />
             <TextInput
               label="Password"
               mode="outlined"
+              secureTextEntry={true}
               testID="passwordField"
               onChangeText={handleChange("password")}
+              error={touched.password && Boolean(errors.password)}
               value={values.password}
               style={{ marginBottom: 16, width: 300 }}
             />
             <TextInput
               label="Confirm Your Passwrd"
               mode="outlined"
+              secureTextEntry={true}
               testID="confirmPasswordField"
               onChangeText={handleChange("confirmPassword")}
+              error={touched.confirmPassword && Boolean(errors.confirmPassword)}
               value={values.confirmPassword}
               style={{ width: 300 }}
             />
@@ -82,6 +91,13 @@ const LoginScreen = () => {
           <View style={styles.buttonContainer}>
             <Button
               mode="contained"
+              testID="createAccountButton"
+              disabled={
+                Boolean(errors.email) ||
+                Boolean(errors.password) ||
+                Boolean(errors.confirmPassword) ||
+                Boolean(errors.username)
+              }
               onPress={() => {
                 handleSubmit;
               }}
@@ -98,6 +114,7 @@ const LoginScreen = () => {
               </Text>
               <Button
                 mode="contained"
+                testID="loginButton"
                 style={{
                   width: 300,
                   marginTop: 8,
