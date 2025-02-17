@@ -12,7 +12,10 @@
     "lint": "expo lint"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@firebase|firebase|@react-native|react-native|expo-modules-core|expo|@expo))"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
