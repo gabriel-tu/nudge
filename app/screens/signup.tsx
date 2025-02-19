@@ -1,10 +1,12 @@
-import { connectAuthEmulator } from "firebase/auth";
+import { router } from "expo-router";
 import { Formik } from "formik";
+import { useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { Button, TextInput, Text, useTheme, Divider } from "react-native-paper";
 import * as yup from "yup";
 
 const LoginScreen = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const theme = useTheme();
 
   const signUpValidationSchema = yup.object().shape({
@@ -17,7 +19,7 @@ const LoginScreen = () => {
       .min(3, ({ min }) => `Username must be at least ${min} characters`),
     password: yup
       .string()
-      .min(6, ({ min }) => "Password must be at least ${min} characters")
+      .min(6, ({ min }) => `Password must be at least ${min} characters`)
       .required("Please enter a password"),
     confirmPassword: yup
       .string()
@@ -37,7 +39,14 @@ const LoginScreen = () => {
       onSubmit={(values) => console.log(values)} // TODO: replace with login logic
       validationSchema={signUpValidationSchema}
     >
-      {({ handleChange, handleSubmit, values, touched, errors }) => (
+      {({
+        values,
+        touched,
+        errors,
+        handleChange,
+        handleSubmit,
+        setFieldTouched,
+      }) => (
         <View style={styles.container}>
           <View style={{ alignItems: "center" }}>
             <Image
@@ -54,36 +63,49 @@ const LoginScreen = () => {
               mode="outlined"
               testID="emailField"
               onChangeText={handleChange("email")}
-              error={touched.email && Boolean(errors.email)}
+              error={touched.email && !!errors.email}
               value={values.email}
               style={{ marginBottom: 16, width: 300 }}
+              onBlur={() => setFieldTouched("email", true)}
             />
             <TextInput
               label="Username"
               mode="outlined"
               testID="usernameField"
               onChangeText={handleChange("username")}
-              error={touched.username && Boolean(errors.username)}
+              error={touched.username && !!errors.username}
               value={values.username}
               style={{ marginBottom: 16, width: 300 }}
+              onBlur={() => setFieldTouched("username", true)}
             />
             <TextInput
               label="Password"
               mode="outlined"
-              secureTextEntry={true}
               testID="passwordField"
               onChangeText={handleChange("password")}
-              error={touched.password && Boolean(errors.password)}
+              error={touched.password && !!errors.password}
               value={values.password}
               style={{ marginBottom: 16, width: 300 }}
+              secureTextEntry={!passwordVisible}
+              onBlur={() => setFieldTouched("password", true)}
+              right={
+                <TextInput.Icon
+                  icon="eye"
+                  onPress={() => {
+                    setPasswordVisible(!passwordVisible);
+                  }}
+                  testID="showPasswordButton"
+                />
+              }
             />
             <TextInput
               label="Confirm Your Passwrd"
               mode="outlined"
-              secureTextEntry={true}
+              secureTextEntry={!passwordVisible}
               testID="confirmPasswordField"
               onChangeText={handleChange("confirmPassword")}
-              error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+              onBlur={() => setFieldTouched("confirmPassword", true)}
+              error={touched.confirmPassword && !!errors.confirmPassword}
               value={values.confirmPassword}
               style={{ width: 300 }}
             />
@@ -93,10 +115,10 @@ const LoginScreen = () => {
               mode="contained"
               testID="createAccountButton"
               disabled={
-                Boolean(errors.email) ||
-                Boolean(errors.password) ||
-                Boolean(errors.confirmPassword) ||
-                Boolean(errors.username)
+                !!errors.email ||
+                !!errors.password ||
+                !!errors.confirmPassword ||
+                !!errors.username
               }
               onPress={() => {
                 handleSubmit;
@@ -121,7 +143,7 @@ const LoginScreen = () => {
                   backgroundColor: theme.colors.secondary,
                 }}
                 onPress={() => {
-                  /* TODO: navigate to login screen*/
+                  router.push("/screens/login");
                 }}
               >
                 Login
