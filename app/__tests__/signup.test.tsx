@@ -8,6 +8,16 @@ import {
 } from "@testing-library/react-native";
 import SignupScreen from "../screens/signup";
 
+// https://github.com/callstack/react-native-testing-library/issues/1712
+jest.mock("expo-font", () => {
+  const module: typeof import("expo-font") = {
+    ...jest.requireActual("expo-font"),
+    isLoaded: jest.fn(() => true),
+  };
+
+  return module;
+});
+
 //this fixes a lot of random errors and I don't know why
 jest.useFakeTimers();
 

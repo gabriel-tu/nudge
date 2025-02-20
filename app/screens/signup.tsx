@@ -2,7 +2,14 @@ import { router } from "expo-router";
 import { Formik } from "formik";
 import { useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { Button, TextInput, Text, useTheme, Divider } from "react-native-paper";
+import {
+  Button,
+  TextInput,
+  Text,
+  useTheme,
+  Divider,
+  HelperText,
+} from "react-native-paper";
 import * as yup from "yup";
 
 const LoginScreen = () => {
@@ -38,6 +45,7 @@ const LoginScreen = () => {
       }}
       onSubmit={(values) => console.log(values)} // TODO: replace with login logic
       validationSchema={signUpValidationSchema}
+      validateOnBlur={false}
     >
       {({
         values,
@@ -65,9 +73,16 @@ const LoginScreen = () => {
               onChangeText={handleChange("email")}
               error={touched.email && !!errors.email}
               value={values.email}
-              style={{ marginBottom: 16, width: 300 }}
+              style={styles.textFields}
               onBlur={() => setFieldTouched("email", true)}
             />
+            <HelperText
+              type="error"
+              visible={touched.email && errors.email ? true : false}
+              testID="emailErrorText"
+            >
+              {touched.email ? errors.email : undefined}
+            </HelperText>
             <TextInput
               label="Username"
               mode="outlined"
@@ -75,9 +90,16 @@ const LoginScreen = () => {
               onChangeText={handleChange("username")}
               error={touched.username && !!errors.username}
               value={values.username}
-              style={{ marginBottom: 16, width: 300 }}
+              style={styles.textFields}
               onBlur={() => setFieldTouched("username", true)}
             />
+            <HelperText
+              type="error"
+              visible={touched.username && errors.username ? true : false}
+              testID="emailErrorText"
+            >
+              {touched.email ? errors.email : undefined}
+            </HelperText>
             <TextInput
               label="Password"
               mode="outlined"
@@ -85,7 +107,7 @@ const LoginScreen = () => {
               onChangeText={handleChange("password")}
               error={touched.password && !!errors.password}
               value={values.password}
-              style={{ marginBottom: 16, width: 300 }}
+              style={styles.textFields}
               secureTextEntry={!passwordVisible}
               onBlur={() => setFieldTouched("password", true)}
               right={
@@ -98,8 +120,15 @@ const LoginScreen = () => {
                 />
               }
             />
+            <HelperText
+              type="error"
+              visible={touched.password && errors.password ? true : false}
+              testID="emailErrorText"
+            >
+              {touched.password ? errors.password : undefined}
+            </HelperText>
             <TextInput
-              label="Confirm Your Passwrd"
+              label="Confirm Your Password"
               mode="outlined"
               secureTextEntry={!passwordVisible}
               testID="confirmPasswordField"
@@ -109,6 +138,15 @@ const LoginScreen = () => {
               value={values.confirmPassword}
               style={{ width: 300 }}
             />
+            <HelperText
+              type="error"
+              visible={
+                touched.confirmPassword && errors.confirmPassword ? true : false
+              }
+              testID="emailErrorText"
+            >
+              {touched.confirmPassword ? errors.confirmPassword : undefined}
+            </HelperText>
           </View>
           <View style={styles.buttonContainer}>
             <Button
@@ -118,7 +156,8 @@ const LoginScreen = () => {
                 !!errors.email ||
                 !!errors.password ||
                 !!errors.confirmPassword ||
-                !!errors.username
+                !!errors.username ||
+                values.password.length === 0
               }
               onPress={() => {
                 handleSubmit;
@@ -171,6 +210,10 @@ const styles = StyleSheet.create({
   },
   textFieldContainer: {
     margin: 24,
+  },
+  textFields: {
+    marginBottom: 16,
+    width: 300,
   },
   buttonContainer: {
     marginBottom: 24,
