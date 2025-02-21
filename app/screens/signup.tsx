@@ -21,9 +21,10 @@ const LoginScreen = () => {
       .string()
       .email("Please enter a valid email")
       .required("An email is required"),
-    username: yup
-      .string()
-      .min(3, ({ min }) => `Username must be at least ${min} characters`),
+    // TODO: Remove when username is connected to accounts
+    // username: yup
+    //   .string()
+    //   .min(3, ({ min }) => `Username must be at least ${min} characters`),
     password: yup
       .string()
       .min(6, ({ min }) => `Password must be at least ${min} characters`)
@@ -88,6 +89,7 @@ const LoginScreen = () => {
               mode="outlined"
               testID="usernameField"
               onChangeText={handleChange("username")}
+              disabled={true} //TODO: Remove when username is connected to accounts
               error={touched.username && !!errors.username}
               value={values.username}
               style={styles.textFields}
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleImage: {
-    height: 60, //TODO: have another value for smaller screens
+    height: 60,
     maxWidth: 300,
     resizeMode: "contain",
   },
@@ -233,6 +235,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontWeight: "bold",
     fontSize: 14,
+    userSelect: "none",
   },
   alreadyHaveAnAccountText: {
     color: "#2E4961",
