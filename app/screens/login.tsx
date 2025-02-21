@@ -8,13 +8,12 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
-import { app } from "../services/config";
+import { app, auth } from "../services/config";
 import { router } from "expo-router";
 
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const auth = getAuth(app);
   const unsubscribe = onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, redirect to the home screen

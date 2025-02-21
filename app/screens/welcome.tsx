@@ -1,17 +1,28 @@
-import { getAuth } from "firebase/auth";
 import { Text, View } from "react-native";
-import { app } from "../services/config";
+import { auth } from "../services/config";
 import { Button } from "react-native-paper";
 import { router } from "expo-router";
-
-const auth = getAuth(app);
+import { onAuthStateChanged } from "firebase/auth";
+import { useState, useEffect } from "react";
 
 const WelcomeScreen = () => {
+  const [email, setEmail] = useState<string>("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.email) {
+        console.log(user.email);
+        setEmail(user.email);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
   return (
     <View>
-      <Text>
-        welcome{auth.currentUser ? " " + auth.currentUser.email : ""}!
-      </Text>
+      <Text>{email ? `Welcome ${email}!` : "Welcome!"}</Text>
       {auth.currentUser ? (
         <Button
           onPress={() => {
@@ -22,9 +33,7 @@ const WelcomeScreen = () => {
         >
           Sign out
         </Button>
-      ) : (
-        ""
-      )}
+      ) : null}
     </View>
   );
 };
