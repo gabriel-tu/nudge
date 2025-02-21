@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { Formik } from "formik";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
@@ -14,17 +14,13 @@ import { router } from "expo-router";
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  useEffect(() => {
-    const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, redirect to the home screen
-        router.push("/screens/welcome");
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
+  const auth = getAuth(app);
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, redirect to the home screen
+      router.push("/screens/welcome");
+      unsubscribe();
+    }
   });
 
   const updatePasswordVisibility = () => {
