@@ -1,13 +1,30 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { Formik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
-import { app } from "../services/config";
+import { app, auth } from "../services/config";
+import { router } from "expo-router";
 
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, redirect to the welcome screen
+        router.push("/screens/welcome");
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   const updatePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -25,16 +42,17 @@ const LoginScreen = () => {
       initialValues={{ email: "", password: "" }}
       validationSchema={loginValidationSchema}
       validateOnBlur={false}
-      onSubmit={(values, errors) => {
+      onSubmit={(values, { setFieldError }) => {
         const auth = getAuth(app);
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userCredential) => {
             const user = userCredential.user;
+            // Handle successful login
+            router.push("/screens/welcome");
           })
           .catch((error) => {
-            const errorCode = error.code;
             const errorMessage = error.message;
-            errors.setFieldError("password", errorMessage);
+            setFieldError("password", errorMessage);
           });
       }}
     >
@@ -127,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff", // remove?
+    backgroundColor: "#fff",
     paddingHorizontal: 20,
   },
   title: {
@@ -135,9 +153,6 @@ const styles = StyleSheet.create({
   },
   textField: {
     width: 300,
-  },
-  textFieldContainer: {
-    padding: 24,
   },
   buttonContainer: {
     width: 100,

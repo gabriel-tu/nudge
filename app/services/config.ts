@@ -1,6 +1,10 @@
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  getAuth,
+  setPersistence,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -21,7 +25,7 @@ if (typeof window !== "undefined") {
   );
 }
 const db = getFirestore(app);
-// TODO: setup persistence so user can remain logged in
 const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence);
 
 export { analytics, app, auth, db };
