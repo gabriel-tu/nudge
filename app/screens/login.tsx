@@ -42,6 +42,7 @@ const LoginScreen = () => {
       initialValues={{ email: "", password: "" }}
       validationSchema={loginValidationSchema}
       validateOnBlur={false}
+      // TODO: Move firebase functions into another file
       onSubmit={(values, { setFieldError }) => {
         const auth = getAuth(app);
         signInWithEmailAndPassword(auth, values.email, values.password)
