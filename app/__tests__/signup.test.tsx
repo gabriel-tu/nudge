@@ -8,6 +8,7 @@ import {
 } from "@testing-library/react-native";
 import SignupScreen from "../screens/signup";
 
+jest.mock("firebase/auth");
 // https://github.com/callstack/react-native-testing-library/issues/1712
 jest.mock("expo-font", () => {
   const module: typeof import("expo-font") = {
@@ -21,7 +22,7 @@ jest.mock("expo-font", () => {
 //this fixes a lot of random errors and I don't know why
 jest.useFakeTimers();
 
-describe("LoginScreen", () => {
+describe("SignupScreen", () => {
   beforeEach(() => {
     render(<SignupScreen />);
   });
@@ -59,9 +60,23 @@ describe("LoginScreen", () => {
     });
 
     expect(emailInput.props.value).toStrictEqual("test@example.com");
-    expect(usernameInput.props.value).toStrictEqual("coolUserName435");
+    // TODO: uncomment when username field is reenabled
+    //expect(usernameInput.props.value).toStrictEqual("coolUserName435");
     expect(passwordInput.props.value).toStrictEqual("!Password123");
     expect(confirmPasswordInput.props.value).toStrictEqual("!Password123");
     expect(createAccountButton.props.accessibilityState.disabled).toBe(false);
+  });
+  it("when show password button is pressed, password is visible", async () => {
+    const passwordInput = screen.getByTestId("passwordField");
+    const showPasswordButton = screen.getByTestId("showPasswordButton");
+    expect(passwordInput.props.secureTextEntry).toBe(true);
+
+    await waitFor(() => {
+      act(() => {
+        fireEvent.press(showPasswordButton);
+      });
+    });
+
+    expect(passwordInput.props.secureTextEntry).toBe(false);
   });
 });

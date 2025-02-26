@@ -1,6 +1,8 @@
 import { router } from "expo-router";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Formik } from "formik";
 import { useState } from "react";
+import { app } from "../services/config";
 import { View, StyleSheet, Image } from "react-native";
 import {
   Button,
@@ -28,13 +30,60 @@ const LoginScreen = () => {
     password: yup
       .string()
       .min(6, ({ min }) => `Password must be at least ${min} characters`)
-      .required("Please enter a password"),
+      .required("Please enter a password")
+      .test(
+        "isValidPass",
+        "Passowrd must be 6 char (One UpperCase & One Symbol)",
+        (value: any, context: any) => {
+          const hasUpperCase = /[A-Z]/.test(value);
+          const hasLowerCase = /[a-z]/.test(value);
+          const hasSymbole = /["!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"]/.test(value);
+          let validConditions = 0;
+          const numberOfMustBeValidConditions = 3;
+          const conditions = [hasUpperCase, hasLowerCase, hasSymbole];
+          conditions.forEach((condition) =>
+            condition ? validConditions++ : null
+          );
+          if (validConditions >= numberOfMustBeValidConditions) {
+            return true;
+          }
+          return false;
+        }
+      ),
     confirmPassword: yup
       .string()
-      .min(6, ({ min }) => `Password must be at least ${min} characters`)
-      .required("Please enter a password")
-      .oneOf([yup.ref("password")], "Does not match with field1!"),
+      .required("Please re-enter your password")
+      .oneOf([yup.ref("password")], "Does not match password"),
   });
+  // TODO: Move firebase functions into another file
+  interface signupFirebaseProps {
+    values: {
+      email: string;
+      username?: string;
+      password: string;
+      confirmPassword: string;
+    };
+    setFieldError: (field: string, message: string | undefined) => void;
+  }
+
+  const signupFirebase = (props: signupFirebaseProps) => {
+    console.log("running?");
+    const auth = getAuth(app);
+    createUserWithEmailAndPassword(
+      auth,
+      props.values.email,
+      props.values.password
+    )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // Handle successful sign up + login
+        router.push("/screens/welcome");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        props.setFieldError("password", errorMessage);
+      });
+  };
 
   return (
     <Formik
@@ -44,7 +93,9 @@ const LoginScreen = () => {
         password: "",
         confirmPassword: "",
       }}
-      onSubmit={(values) => console.log(values)} // TODO: replace with login logic
+      onSubmit={(values, { setFieldError }) =>
+        signupFirebase({ values, setFieldError })
+      }
       validationSchema={signUpValidationSchema}
       validateOnBlur={false}
     >
@@ -161,9 +212,7 @@ const LoginScreen = () => {
                 !!errors.username ||
                 values.password.length === 0
               }
-              onPress={() => {
-                handleSubmit;
-              }}
+              onPress={() => handleSubmit()}
               style={{ width: 300 }}
             >
               Create Account
