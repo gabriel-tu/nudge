@@ -37,17 +37,8 @@ const LoginScreen = () => {
         (value: any, context: any) => {
           const hasUpperCase = /[A-Z]/.test(value);
           const hasLowerCase = /[a-z]/.test(value);
-          const hasSymbole = /["!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"]/.test(value);
-          let validConditions = 0;
-          const numberOfMustBeValidConditions = 3;
-          const conditions = [hasUpperCase, hasLowerCase, hasSymbole];
-          conditions.forEach((condition) =>
-            condition ? validConditions++ : null
-          );
-          if (validConditions >= numberOfMustBeValidConditions) {
-            return true;
-          }
-          return false;
+          const hasSymbol = /["!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"]/.test(value);
+          return hasUpperCase && hasLowerCase && hasSymbol;
         }
       ),
     confirmPassword: yup
