@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Formik } from "formik";
 import { useState } from "react";
-import { app } from "../services/config";
+import { app, auth } from "../services/config";
 import { View, StyleSheet, Image } from "react-native";
 import {
   Button,
@@ -67,8 +67,6 @@ const LoginScreen = () => {
   }
 
   const signupFirebase = (props: signupFirebaseProps) => {
-    console.log("running?");
-    const auth = getAuth(app);
     createUserWithEmailAndPassword(
       auth,
       props.values.email,
