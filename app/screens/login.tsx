@@ -129,6 +129,9 @@ const LoginScreen = () => {
             mode="outlined"
             style={styles.buttonContainer}
             testID="signupButton"
+            onPress={() => {
+              router.push("/screens/signup");
+            }}
           >
             Signup
           </Button>
