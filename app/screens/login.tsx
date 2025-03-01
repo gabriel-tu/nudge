@@ -42,8 +42,8 @@ const LoginScreen = () => {
       initialValues={{ email: "", password: "" }}
       validationSchema={loginValidationSchema}
       validateOnBlur={false}
+      // TODO: Move firebase functions into another file
       onSubmit={(values, { setFieldError }) => {
-        const auth = getAuth(app);
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userCredential) => {
             const user = userCredential.user;
@@ -129,6 +129,9 @@ const LoginScreen = () => {
             mode="outlined"
             style={styles.buttonContainer}
             testID="signupButton"
+            onPress={() => {
+              router.push("/screens/signup");
+            }}
           >
             Signup
           </Button>
