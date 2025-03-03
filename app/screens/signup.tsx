@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Formik } from "formik";
 import { useState } from "react";
-import { app } from "../services/config";
+import { app, auth } from "../services/config";
 import { View, StyleSheet, Image } from "react-native";
 import {
   Button,
@@ -37,17 +37,8 @@ const LoginScreen = () => {
         (value: any, context: any) => {
           const hasUpperCase = /[A-Z]/.test(value);
           const hasLowerCase = /[a-z]/.test(value);
-          const hasSymbole = /["!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"]/.test(value);
-          let validConditions = 0;
-          const numberOfMustBeValidConditions = 3;
-          const conditions = [hasUpperCase, hasLowerCase, hasSymbole];
-          conditions.forEach((condition) =>
-            condition ? validConditions++ : null
-          );
-          if (validConditions >= numberOfMustBeValidConditions) {
-            return true;
-          }
-          return false;
+          const hasSymbol = /["!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"]/.test(value);
+          return hasUpperCase && hasLowerCase && hasSymbol;
         }
       ),
     confirmPassword: yup
@@ -67,8 +58,6 @@ const LoginScreen = () => {
   }
 
   const signupFirebase = (props: signupFirebaseProps) => {
-    console.log("running?");
-    const auth = getAuth(app);
     createUserWithEmailAndPassword(
       auth,
       props.values.email,
