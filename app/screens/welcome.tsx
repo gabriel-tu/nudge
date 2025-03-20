@@ -4,6 +4,7 @@ import { Button } from "react-native-paper";
 import { router } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
+import { FriendListItem } from "./components/FriendListItem";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState<string>("");
@@ -34,6 +35,11 @@ const WelcomeScreen = () => {
           Sign out
         </Button>
       ) : null}
+      <FriendListItem
+        image={require("../../assets/images/default-profile-picture.png")} //TODO: figure out images
+        name="Johhny Chau"
+        lastNudged="10:23am"
+      />
     </View>
   );
 };
