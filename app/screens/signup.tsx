@@ -1,8 +1,9 @@
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import { useState } from "react";
-import { app, auth } from "../services/config";
+import { app, auth, db } from "../services/config";
 import { View, StyleSheet, Image } from "react-native";
 import {
   Button,
@@ -23,10 +24,9 @@ const LoginScreen = () => {
       .string()
       .email("Please enter a valid email")
       .required("An email is required"),
-    // TODO: Remove when username is connected to accounts
-    // username: yup
-    //   .string()
-    //   .min(3, ({ min }) => `Username must be at least ${min} characters`),
+    username: yup
+      .string()
+      .min(3, ({ min }) => `Username must be at least ${min} characters`),
     password: yup
       .string()
       .min(6, ({ min }) => `Password must be at least ${min} characters`)
@@ -64,8 +64,16 @@ const LoginScreen = () => {
       props.values.password
     )
       .then((userCredential) => {
-        const user = userCredential.user;
         // Handle successful sign up + login
+        const user = userCredential.user;
+        // Create a new doc in the "User" collection
+        // for friend list and username
+        setDoc(doc(db, "Users", user.uid), {
+          userName: "",
+          friends: [],
+          outgoingFriendRequests: [],
+          incomingFriendRequests: [],
+        });
         router.push("/screens/welcome");
       })
       .catch((error) => {
@@ -129,7 +137,6 @@ const LoginScreen = () => {
               mode="outlined"
               testID="usernameField"
               onChangeText={handleChange("username")}
-              disabled={true} //TODO: Remove when username is connected to accounts
               error={touched.username && !!errors.username}
               value={values.username}
               style={styles.textFields}
