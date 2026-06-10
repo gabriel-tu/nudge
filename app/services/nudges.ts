@@ -2,7 +2,12 @@ import {
   addDoc,
   collection,
   doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
   Timestamp,
+  where,
   writeBatch,
 } from "firebase/firestore";
 import { db } from "./config";
@@ -19,6 +24,28 @@ export interface Nudge {
   participants: string[];
   createdAt: Timestamp;
 }
+
+// Live feed of the latest nudges this user sent or received.
+// Note: Firestore asks for a composite index (participants + createdAt)
+// on first use — create it from the link in the error message.
+export const subscribeToNudgeFeed = (
+  uid: string,
+  callback: (nudges: Nudge[]) => void
+) =>
+  onSnapshot(
+    query(
+      collection(db, "Nudges"),
+      where("participants", "array-contains", uid),
+      orderBy("createdAt", "desc"),
+      limit(50)
+    ),
+    (snapshot) =>
+      callback(
+        snapshot.docs.map(
+          (nudgeDoc) => ({ id: nudgeDoc.id, ...nudgeDoc.data() } as Nudge)
+        )
+      )
+  );
 
 // Seconds until `me` may nudge this friend again (0 = ready now).
 export const getCooldownRemaining = (me: NudgeUser, friendUid: string) => {
