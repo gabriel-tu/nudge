@@ -1,14 +1,10 @@
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
-import { app, auth } from "../services/config";
+import { auth } from "../services/config";
 import { router } from "expo-router";
 
 const LoginScreen = () => {
@@ -17,8 +13,8 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, redirect to the welcome screen
-        router.push("/screens/welcome");
+        // User is signed in, send them to the app
+        router.replace("/(tabs)");
       }
     });
 
@@ -45,10 +41,8 @@ const LoginScreen = () => {
       // TODO: Move firebase functions into another file
       onSubmit={(values, { setFieldError }) => {
         signInWithEmailAndPassword(auth, values.email, values.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            // Handle successful login
-            router.push("/screens/welcome");
+          .then(() => {
+            router.replace("/(tabs)");
           })
           .catch((error) => {
             const errorMessage = error.message;

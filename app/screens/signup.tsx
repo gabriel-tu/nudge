@@ -1,9 +1,9 @@
 import { router } from "expo-router";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik } from "formik";
 import { useState } from "react";
-import { app, auth, db } from "../services/config";
+import { auth } from "../services/config";
+import { createUserDoc, findUserByUsername } from "../services/users";
 import { View, StyleSheet, Image } from "react-native";
 import {
   Button,
@@ -15,7 +15,7 @@ import {
 } from "react-native-paper";
 import * as yup from "yup";
 
-const LoginScreen = () => {
+const SignupScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const theme = useTheme();
 
@@ -26,7 +26,8 @@ const LoginScreen = () => {
       .required("An email is required"),
     username: yup
       .string()
-      .min(3, ({ min }) => `Username must be at least ${min} characters`),
+      .min(3, ({ min }) => `Username must be at least ${min} characters`)
+      .required("A username is required"),
     password: yup
       .string()
       .min(6, ({ min }) => `Password must be at least ${min} characters`)
@@ -46,40 +47,33 @@ const LoginScreen = () => {
       .required("Please re-enter your password")
       .oneOf([yup.ref("password")], "Does not match password"),
   });
-  // TODO: Move firebase functions into another file
   interface signupFirebaseProps {
     values: {
       email: string;
-      username?: string;
+      username: string;
       password: string;
       confirmPassword: string;
     };
     setFieldError: (field: string, message: string | undefined) => void;
   }
 
-  const signupFirebase = (props: signupFirebaseProps) => {
-    createUserWithEmailAndPassword(
-      auth,
-      props.values.email,
-      props.values.password
-    )
-      .then((userCredential) => {
-        // Handle successful sign up + login
-        const user = userCredential.user;
-        // Create a new doc in the "User" collection
-        // for friend list and username
-        setDoc(doc(db, "Users", user.uid), {
-          userName: "",
-          friends: [],
-          outgoingFriendRequests: [],
-          incomingFriendRequests: [],
-        });
-        router.push("/screens/welcome");
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        props.setFieldError("password", errorMessage);
-      });
+  const signupFirebase = async (props: signupFirebaseProps) => {
+    try {
+      const existingUser = await findUserByUsername(props.values.username);
+      if (existingUser) {
+        props.setFieldError("username", "This username is already taken");
+        return;
+      }
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        props.values.email,
+        props.values.password
+      );
+      await createUserDoc(userCredential.user.uid, props.values.username);
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      props.setFieldError("password", error.message);
+    }
   };
 
   return (
@@ -145,9 +139,9 @@ const LoginScreen = () => {
             <HelperText
               type="error"
               visible={touched.username && errors.username ? true : false}
-              testID="emailErrorText"
+              testID="usernameErrorText"
             >
-              {touched.email ? errors.email : undefined}
+              {touched.username ? errors.username : undefined}
             </HelperText>
             <TextInput
               label="Password"
@@ -172,7 +166,7 @@ const LoginScreen = () => {
             <HelperText
               type="error"
               visible={touched.password && errors.password ? true : false}
-              testID="emailErrorText"
+              testID="passwordErrorText"
             >
               {touched.password ? errors.password : undefined}
             </HelperText>
@@ -192,7 +186,7 @@ const LoginScreen = () => {
               visible={
                 touched.confirmPassword && errors.confirmPassword ? true : false
               }
-              testID="emailErrorText"
+              testID="confirmPasswordErrorText"
             >
               {touched.confirmPassword ? errors.confirmPassword : undefined}
             </HelperText>
@@ -242,7 +236,7 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
