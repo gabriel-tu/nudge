@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-const ProfileScreen = ({ navigation, route }) => {
+const ProfileScreen = () => {
   return <Text>This is wow's profile</Text>;
 };
 

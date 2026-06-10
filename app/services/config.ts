@@ -1,11 +1,16 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {
   browserLocalPersistence,
   getAuth,
+  initializeAuth,
   setPersistence,
 } from "firebase/auth";
+// @ts-expect-error -- shipped in firebase's react-native bundle but missing from the web type defs
+import { getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { Platform } from "react-native";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
@@ -25,7 +30,17 @@ if (typeof window !== "undefined") {
   );
 }
 const db = getFirestore(app);
-const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
+
+// browserLocalPersistence only works on web; native needs AsyncStorage-backed
+// persistence or the user is signed out on every app launch.
+const auth =
+  Platform.OS === "web"
+    ? getAuth(app)
+    : initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage),
+      });
+if (Platform.OS === "web") {
+  setPersistence(auth, browserLocalPersistence);
+}
 
 export { analytics, app, auth, db };
