@@ -16,7 +16,7 @@ export default function RootLayout() {
     <PaperProvider theme={theme}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="screens/profile" />
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen name="screens/login" />
         <Stack.Screen name="screens/signup" />
       </Stack>

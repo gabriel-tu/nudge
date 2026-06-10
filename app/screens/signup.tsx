@@ -70,7 +70,7 @@ const SignupScreen = () => {
         props.values.password
       );
       await createUserDoc(userCredential.user.uid, props.values.username);
-      router.push("/screens/welcome");
+      router.replace("/(tabs)");
     } catch (error: any) {
       props.setFieldError("password", error.message);
     }

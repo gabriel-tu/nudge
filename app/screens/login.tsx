@@ -17,8 +17,8 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, redirect to the welcome screen
-        router.push("/screens/welcome");
+        // User is signed in, send them to the app
+        router.replace("/(tabs)");
       }
     });
 
@@ -45,10 +45,8 @@ const LoginScreen = () => {
       // TODO: Move firebase functions into another file
       onSubmit={(values, { setFieldError }) => {
         signInWithEmailAndPassword(auth, values.email, values.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            // Handle successful login
-            router.push("/screens/welcome");
+          .then(() => {
+            router.replace("/(tabs)");
           })
           .catch((error) => {
             const errorMessage = error.message;
