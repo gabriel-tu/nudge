@@ -19,6 +19,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="screens/login" />
         <Stack.Screen name="screens/signup" />
+        <Stack.Screen name="screens/friend/[id]" />
       </Stack>
     </PaperProvider>
   );

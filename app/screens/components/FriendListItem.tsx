@@ -1,20 +1,41 @@
-import { View, StyleSheet } from "react-native";
+import { Timestamp } from "firebase/firestore";
+import { StyleSheet, View } from "react-native";
 import { Avatar, Button, Card, Text } from "react-native-paper";
 
-interface props {
-  image: any; //TODO: figure out images
+const defaultProfilePicture = require("../../../assets/images/default-profile-picture.png");
+
+interface Props {
   name: string;
-  lastNudged: any; //TODO: do we want to use a string or date
+  photoBase64?: string;
+  lastNudged?: Timestamp;
+  onPress?: () => void;
+  testID?: string;
 }
 
-export const FriendListItem = (props: props) => {
+const formatLastNudged = (lastNudged?: Timestamp) => {
+  if (!lastNudged) return "Never nudged";
+  const date = lastNudged.toDate();
+  const isToday = date.toDateString() === new Date().toDateString();
+  return isToday
+    ? `Last nudged at ${date.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      })}`
+    : `Last nudged ${date.toLocaleDateString()}`;
+};
+
+export const FriendListItem = (props: Props) => {
   return (
-    <Card style={{ width: 400 }}>
+    <Card style={styles.card} onPress={props.onPress} testID={props.testID}>
       <View style={styles.container}>
         <Avatar.Image
           style={styles.imageContainer}
           size={56}
-          source={props.image}
+          source={
+            props.photoBase64
+              ? { uri: `data:image/jpeg;base64,${props.photoBase64}` }
+              : defaultProfilePicture
+          }
         />
 
         <View style={styles.textContainer}>
@@ -22,10 +43,15 @@ export const FriendListItem = (props: props) => {
             {props.name}
           </Text>
           <Text variant="bodySmall" style={styles.lastNudgedText}>
-            {props.lastNudged}
+            {formatLastNudged(props.lastNudged)}
           </Text>
         </View>
-        <Button style={styles.buttonContainer} mode="contained">
+        <Button
+          style={styles.buttonContainer}
+          mode="contained"
+          onPress={props.onPress}
+          testID={props.testID ? `${props.testID}NudgeButton` : undefined}
+        >
           nudge
         </Button>
       </View>
@@ -34,6 +60,10 @@ export const FriendListItem = (props: props) => {
 };
 
 const styles = StyleSheet.create({
+  card: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+  },
   container: {
     display: "flex",
     flexDirection: "row",
@@ -52,6 +82,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     justifyContent: "center",
+    flexShrink: 1,
   },
   nameText: {
     fontWeight: "bold",
