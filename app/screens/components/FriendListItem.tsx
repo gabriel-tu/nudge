@@ -12,7 +12,7 @@ interface Props {
   testID?: string;
 }
 
-const formatLastNudged = (lastNudged?: Timestamp) => {
+export const formatLastNudged = (lastNudged?: Timestamp) => {
   if (!lastNudged) return "Never nudged";
   const date = lastNudged.toDate();
   const isToday = date.toDateString() === new Date().toDateString();
