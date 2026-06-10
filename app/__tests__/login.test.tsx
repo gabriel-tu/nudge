@@ -28,7 +28,6 @@ describe("LoginScreen", () => {
   let emailInput: ReactTestInstance,
     passwordInput: ReactTestInstance,
     loginButton: ReactTestInstance,
-    emailErrorText: ReactTestInstance,
     passwordErrorText: ReactTestInstance,
     showPasswordButton: ReactTestInstance;
 
@@ -37,7 +36,6 @@ describe("LoginScreen", () => {
     emailInput = screen.getByTestId("emailField");
     passwordInput = screen.getByTestId("passwordField");
     loginButton = screen.getByTestId("loginButton");
-    emailErrorText = screen.getByTestId("emailErrorText");
     passwordErrorText = screen.getByTestId("passwordErrorText");
     showPasswordButton = screen.getByTestId("showPasswordButton");
   });

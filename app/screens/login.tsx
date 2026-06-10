@@ -1,14 +1,10 @@
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import * as yup from "yup";
-import { app, auth } from "../services/config";
+import { auth } from "../services/config";
 import { router } from "expo-router";
 
 const LoginScreen = () => {
